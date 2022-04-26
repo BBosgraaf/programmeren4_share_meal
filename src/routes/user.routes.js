@@ -21,7 +21,7 @@ router.get("/api/user/profile", (req, res) => {
 });
 
 //Gebruiker toevoegen (met email check)
-router.post("/api/user", userController.addUser);
+router.post("/api/user", userController.validateUser, userController.addUser);
 
 //Gebruiker ophalen op basis van ID
 router.get("/api/user/:userId", userController.getUserById);
