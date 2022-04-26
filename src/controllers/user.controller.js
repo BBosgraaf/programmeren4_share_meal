@@ -11,15 +11,16 @@ let controller = {
       assert(typeof lastName === "string", "Lastname must be a string");
       assert(typeof emailAdress === "string", "Emailaddress must be a string");
       assert(typeof password === "string", "Password must be a string");
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({
-        status: 400,
-        message: err.toString(),
-      });
-    }
 
-    next();
+      next();
+    } catch (err) {
+      const error = {
+        status: 400,
+        message: err.message,
+      };
+
+      next(error);
+    }
   },
   addUser: (req, res) => {
     let user = req.body;
