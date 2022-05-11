@@ -85,9 +85,6 @@ let controller = {
               });
             }
             connection.release();
-            // dbconnection.end((err) => {
-            //   console.log("pool was closed.");
-            // });
           }
         );
       });
@@ -111,8 +108,8 @@ let controller = {
           // Don't use the connection here, it has been returned to the pool.
           console.log("result = ", results.length);
           res.status(200).json({
-            statusCode: 200,
-            results: results,
+            status: 200,
+            result: results,
           });
         }
       );
@@ -187,7 +184,7 @@ let controller = {
               console.log("#results = ", results.length);
               res.status(200).json({
                 status: 200,
-                result: `User with ID ${userId} deleted!`,
+                message: `User with ID ${userId} deleted!`,
               });
 
               connection.release();
@@ -196,7 +193,7 @@ let controller = {
         } else {
           res.status(401).json({
             status: 401,
-            result: `User with ID ${userId} not found!`,
+            message: `User with ID ${userId} not found!`,
           });
         }
       });
@@ -271,13 +268,13 @@ let controller = {
                 console.log(`User with ID ${userId} succesfully changed`);
                 res.status(201).json({
                   status: 201,
-                  result: `User with ID ${userId} succesfully changed`,
+                  message: `User with ID ${userId} succesfully changed`,
                 });
               } else {
                 console.log(`Emailaddress  already exists`);
                 res.status(401).json({
                   status: 401,
-                  result: `Emailaddress  already exists`,
+                  message: `Emailaddress  already exists`,
                 });
               }
             }
@@ -286,7 +283,7 @@ let controller = {
           console.log(`User with ID ${userId} not found`);
           res.status(401).json({
             status: 401,
-            result: `User with ID ${userId} not found`,
+            message: `User with ID ${userId} not found`,
           });
         }
       });
