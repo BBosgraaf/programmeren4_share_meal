@@ -35,7 +35,7 @@ describe("UC-201 Registreren als nieuwe gebruiker ", () => {
           status.should.equals(400);
           message.should.be
             .a("string")
-            .that.equals("Firstname must be a string!");
+            .that.equals("Firstname must be a string");
 
           done();
         });
