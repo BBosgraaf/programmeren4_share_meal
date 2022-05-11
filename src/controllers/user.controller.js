@@ -25,34 +25,73 @@ let controller = {
   },
   addUser: (req, res) => {
     let user = req.body;
-    let emailadress = req.body.emailadress;
-    let emailcheck = true;
+    let emailAdress = req.body.emailAdress;
+    let emailCheck;
 
-    //Gaat in de database zoeken of emailadres al bestaat
-    for (let i = 0; i < database.length; i++) {
-      if (database[i].emailadress == emailadress) {
-        emailcheck = false;
-      }
-    }
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
 
-    if (emailcheck == true) {
-      id++;
-      user = {
-        id,
-        ...user,
-      };
-      console.log(user);
-      database.push(user);
-      res.status(201).json({
-        status: 201,
-        result: database,
+      // Use the connection
+      connection.query("SELECT * FROM user", function (error, results, fields) {
+        // When done with the connection, release it.
+
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].emailAdress == emailAdress) {
+            emailCheck = false;
+          }
+        }
+        // Handle error after the release.
+        if (error) throw error;
+        // Don't use the connection here, it has been returned to the pool.
+        console.log("Aantal results = ", results.length);
+        connection.query(
+          "SELECT MAX(id) as maxId FROM user;",
+          function (error, resultsId, fields) {
+            if (emailCheck != false) {
+              id = resultsId[0].maxId + 1;
+              user = {
+                id,
+                ...user,
+              };
+              console.log(user);
+
+              connection.query(
+                "INSERT INTO user (id, firstName, lastName, isActive, emailAdress, password, phoneNumber, roles, street, city) VALUES(" +
+                  id +
+                  ",'" +
+                  user.firstName +
+                  "','" +
+                  user.lastName +
+                  "','','" +
+                  user.emailAdress +
+                  "','" +
+                  user.password +
+                  "'," +
+                  user.phoneNumber +
+                  ",'','" +
+                  user.street +
+                  "','" +
+                  user.city +
+                  "')"
+              );
+              res.status(201).json({
+                status: 201,
+                message: `User succefully added`,
+              });
+            } else {
+              res.status(401).json({
+                status: 401,
+                message: `Emailaddress already exists`,
+              });
+            }
+            connection.release();
+            // dbconnection.end((err) => {
+            //   console.log("pool was closed.");
+            // });
+          }
+        );
       });
-    } else {
-      res.status(401).json({
-        status: 401,
-        message: "Emailadress already exists",
-      });
-    }
+    });
   },
 
   getAllUsers: (req, res, next) => {
@@ -75,9 +114,6 @@ let controller = {
             statusCode: 200,
             results: results,
           });
-          // pool.end((err) => {
-          //   console.log("pool was closed.");
-          // });
         }
       );
     });
@@ -86,85 +122,175 @@ let controller = {
   getUserById: (req, res, next) => {
     const userId = req.params.userId;
     console.log(`Searched for user with ID: ${userId}`);
-    let user = database.filter((item) => item.id == userId);
-    if (user.length > 0) {
-      console.log(user);
-      res.status(200).json({
-        status: 200,
-        result: user,
-      });
-    } else {
-      res.status(401).json({
-        status: 401,
-        result: `User with ID ${userId} not found`,
-      });
-    }
+
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      connection.query(
+        "SELECT * FROM user;",
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          let user = results.filter((item) => item.id == userId);
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          // Don't use the connection here, it has been returned to the pool.
+          console.log("result = ", results.length);
+          if (user.length > 0) {
+            console.log(user);
+            res.status(200).json({
+              status: 200,
+              result: user,
+            });
+          } else {
+            res.status(401).json({
+              status: 401,
+              message: `User with ID ${userId} not found`,
+            });
+          }
+        }
+      );
+    });
   },
 
   delUserById: (req, res, next) => {
     const userId = req.params.userId;
     console.log(`Searched for user with ID: ${userId}`);
 
-    let delUserId = null;
+    let idCheck;
 
-    for (let i = 0; i < database.length; i++) {
-      if (database[i].id == userId) {
-        delUserId = i;
-        break;
-      }
-    }
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+      connection.query("SELECT * FROM user", function (error, results, fields) {
+        // When done with the connection, release it.
 
-    if (delUserId != null) {
-      //User verwijderen uit database(array)
-      database.splice(delUserId, 1);
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].id == userId) {
+            idCheck = false;
+            break;
+          }
+        }
+        // Use the connection
+        if (idCheck == false) {
+          connection.query(
+            "DELETE FROM user WHERE user.id = " + userId + ";",
+            function (error, results, fields) {
+              // When done with the connection, release it.
+              // Handle error after the release.
+              if (error) throw error;
 
-      console.log(`User ${userId} deleted`);
-      res.status(200).json({
-        status: 200,
-        message: `User with ID ${userId} deleted`,
+              // Don't use the connection here, it has been returned to the pool.
+              console.log("#results = ", results.length);
+              res.status(200).json({
+                status: 200,
+                result: `User with ID ${userId} deleted!`,
+              });
+
+              connection.release();
+            }
+          );
+        } else {
+          res.status(401).json({
+            status: 401,
+            result: `User with ID ${userId} not found!`,
+          });
+        }
       });
-    } else {
-      res.status(401).json({
-        status: 401,
-        message: `User with ID ${userId} not found`,
-      });
-    }
+    });
   },
 
   updateUserById: (req, res, next) => {
     const userId = req.params.userId;
+    console.log(`user met ID ${userId} gezocht`);
+
+    let idCheck;
+    let emailCheck = true;
     let user = req.body;
-    console.log(`Searched for user with ID: ${userId}`);
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
 
-    let delUserId = null;
+      // Use the connection
+      connection.query("SELECT * FROM user", function (error, results, fields) {
+        // When done with the connection, release it.
+        connection.release();
 
-    for (let i = 0; i < database.length; i++) {
-      if (database[i].id == userId) {
-        delUserId = i;
-        break;
-      }
-    }
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].id == userId) {
+            idCheck = true;
+          }
+        }
 
-    if (delUserId != null) {
-      database.splice(delUserId, 1);
+        // Don't use the connection here, it has been returned to the pool.
+        if (idCheck == true) {
+          connection.query(
+            "SELECT * FROM user WHERE id = " + userId + "",
+            function (error, results2, fields) {
+              for (let i = 0; i < results.length; i++) {
+                if (results[i].emailAdress == user.emailAdress) {
+                  emailCheck = false;
+                  break;
+                }
+                if (results2[0].emailAdress == user.emailAdress) {
+                  emailCheck = true;
+                  break;
+                }
+              }
+              if (emailCheck == true) {
+                console.log(results2[0].emailAdress);
+                // Handle error after the release.
+                if (error) throw error;
+                id = parseInt(userId);
+                user = {
+                  id,
+                  ...user,
+                };
 
-      id = parseInt(userId);
-      user = {
-        id,
-        ...user,
-      };
-      console.log(user);
-      database.push(user);
-      res.status(201).json({
-        status: 201,
-        result: user,
+                connection.query(
+                  "UPDATE `user` SET `firstName`='" +
+                    user.firstName +
+                    "',`lastName`='" +
+                    user.lastName +
+                    "',`emailAdress`='" +
+                    user.emailAdress +
+                    "',`password`='" +
+                    user.password +
+                    "',`phoneNumber`='" +
+                    user.phoneNumber +
+                    "',`street`='" +
+                    user.street +
+                    "',`city`='" +
+                    user.city +
+                    "' WHERE id = " +
+                    userId +
+                    ""
+                );
+                console.log(`User with ID ${userId} succesfully changed`);
+                res.status(201).json({
+                  status: 201,
+                  result: `User with ID ${userId} succesfully changed`,
+                });
+              } else {
+                console.log(`Emailaddress  already exists`);
+                res.status(401).json({
+                  status: 401,
+                  result: `Emailaddress  already exists`,
+                });
+              }
+            }
+          );
+        } else {
+          console.log(`User with ID ${userId} not found`);
+          res.status(401).json({
+            status: 401,
+            result: `User with ID ${userId} not found`,
+          });
+        }
       });
-    } else {
-      res.status(401).json({
-        status: 401,
-        result: `User with ID ${userId} not found`,
-      });
-    }
+    });
   },
 };
 
