@@ -36,9 +36,9 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: npm run test
+      - name: npm test
         run: |
-          npm run test -- --DB_PASSWORD $MYSQL_ROOT_PASSWORD --DB_USER root --DB_NAME $DB_DATABASE
+          npm test -- --DB_PASSWORD $MYSQL_ROOT_PASSWORD --DB_USER root --DB_NAME $DB_DATABASE
   deploy:
     needs: integrationtests
     runs-on: ubuntu-latest
