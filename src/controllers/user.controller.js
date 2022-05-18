@@ -62,7 +62,7 @@ let controller = {
                   user.firstName +
                   "','" +
                   user.lastName +
-                  "','','" +
+                  "','1','" +
                   user.emailAdress +
                   "','" +
                   user.password +
