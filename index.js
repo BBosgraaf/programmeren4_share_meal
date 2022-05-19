@@ -3,6 +3,7 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT;
 const userRouter = require("./src/routes/user.routes");
+const authRoutes = require("./src/routes/auth.routes");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -18,6 +19,7 @@ app.all("*", (req, res, next) => {
 
 //Router gebruiken met alle routes van users
 app.use(userRouter);
+app.use("/api", authRoutes);
 
 app.all("*", (req, res) => {
   res.status(401).json({
@@ -27,6 +29,14 @@ app.all("*", (req, res) => {
 });
 
 //Error handler
+// app.use((err, req, res, next) => {
+//   console.log("Error: " + err.toString());
+//   res.status(400).json({
+//     status: 400,
+//     message: err.toString(),
+//   });
+// });
+
 app.use((err, req, res, next) => {
   res.status(err.status).json(err);
 });

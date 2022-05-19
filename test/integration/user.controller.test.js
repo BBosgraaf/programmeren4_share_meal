@@ -2,6 +2,9 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../index");
 
+const jwt = require("jsonwebtoken");
+const { jwtSecretKey, logger } = require("../../src/config/config");
+
 let database = [];
 
 chai.should();
@@ -120,6 +123,7 @@ describe("UC-202 Overzicht van gebruikers ", () => {
       chai
         .request(server)
         .get("/api/user")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");
@@ -146,6 +150,7 @@ describe("UC-204 Details van gebruikers ", () => {
       chai
         .request(server)
         .get("/api/user/99999")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");
@@ -171,6 +176,7 @@ describe("UC-204 Details van gebruikers ", () => {
       chai
         .request(server)
         .get("/api/user/1")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");
@@ -197,6 +203,7 @@ describe("UC-205 Gebruiker wijzigen ", () => {
       chai
         .request(server)
         .post("/api/user/6")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
         .send({
           firstName: "verandering",
           lastName: "achternaam",
@@ -230,6 +237,7 @@ describe("UC-205 Gebruiker wijzigen ", () => {
       chai
         .request(server)
         .post("/api/user/6")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
         .send({
           firstName: "verandering",
           lastName: "achternaam",
@@ -264,6 +272,7 @@ describe("UC-205 Gebruiker wijzigen ", () => {
       chai
         .request(server)
         .post("/api/user/99999")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
         .send({
           firstName: "verandering",
           lastName: "achternaam",
@@ -301,6 +310,7 @@ describe("UC-206 Verwijderen gebruiker ", () => {
       chai
         .request(server)
         .delete("/api/user/6")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");
@@ -324,6 +334,7 @@ describe("UC-206 Verwijderen gebruiker ", () => {
       chai
         .request(server)
         .delete("/api/user/99999")
+        .set("authorization", "Bearer " + jwt.sign({ id: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");

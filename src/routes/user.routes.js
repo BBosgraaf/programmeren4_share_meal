@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
+const authController = require("../controllers/auth.controller");
 
 let database = [];
 let id = 0;
@@ -24,15 +25,31 @@ router.get("/api/user/profile", (req, res) => {
 router.post("/api/user", userController.validateUser, userController.addUser);
 
 //Gebruiker ophalen op basis van ID
-router.get("/api/user/:userId", userController.getUserById);
+router.get(
+  "/api/user/:userId",
+  authController.validateToken,
+  userController.getUserById
+);
 
 //Verwijderen gebruiker op basis van ID
-router.delete("/api/user/:userId", userController.delUserById);
+router.delete(
+  "/api/user/:userId",
+  authController.validateToken,
+  userController.delUserById
+);
 
 //Updaten van gebruiker op basis van ID
-router.post("/api/user/:userId", userController.updateUserById);
+router.post(
+  "/api/user/:userId",
+  authController.validateToken,
+  userController.updateUserById
+);
 
 //Ophalen alle gebruikers
-router.get("/api/user", userController.getAllUsers);
+router.get(
+  "/api/user",
+  authController.validateToken,
+  userController.getAllUsers
+);
 
 module.exports = router;
