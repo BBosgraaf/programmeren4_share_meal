@@ -111,7 +111,7 @@ let controller = {
       }
 
       if (isActive) {
-        queryString += `isActive = ?`;
+        queryString += `isActive = ${isActive}`;
 
         queryString += ";";
       }
