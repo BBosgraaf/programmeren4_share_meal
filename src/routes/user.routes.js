@@ -14,12 +14,11 @@ router.get("/", (req, res) => {
 });
 
 //Profiel ophalen (Functionaliteit nog niet gerealiseerd)
-router.get("/api/user/profile", (req, res) => {
-  res.status(416).json({
-    status: 416,
-    message: "Functionality not realized yet",
-  });
-});
+router.get(
+  "/api/user/profile",
+  authController.validateToken,
+  userController.userProfile
+);
 
 //Gebruiker toevoegen (met email check)
 router.post("/api/user", userController.validateUser, userController.addUser);

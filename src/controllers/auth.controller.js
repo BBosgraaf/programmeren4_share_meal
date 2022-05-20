@@ -52,7 +52,7 @@ let controller = {
                   function (err, token) {
                     logger.debug("User logged in, sending: ", userinfo);
                     res.status(200).json({
-                      statusCode: 200,
+                      status: 200,
                       results: { ...userinfo, token },
                     });
                   }
@@ -88,7 +88,7 @@ let controller = {
       next();
     } catch (ex) {
       res.status(422).json({
-        error: ex.toString(),
+        message: ex.toString(),
         datetime: new Date().toISOString(),
       });
     }
@@ -105,7 +105,8 @@ let controller = {
     if (!authHeader) {
       logger.warn("Authorization header missing!");
       res.status(401).json({
-        error: "Authorization header missing!",
+        status: 401,
+        message: "Authorization header missing!",
         datetime: new Date().toISOString(),
       });
     } else {
@@ -116,7 +117,8 @@ let controller = {
         if (err) {
           logger.warn("Not authorized");
           res.status(401).json({
-            error: "Not authorized",
+            status: 401,
+            message: "Not authorized",
             datetime: new Date().toISOString(),
           });
         }

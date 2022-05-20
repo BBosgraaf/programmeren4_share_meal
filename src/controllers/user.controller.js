@@ -3,6 +3,9 @@ let database = [];
 const dbconnection = require("../../dbconnection");
 let id = 0;
 
+const jwtSecretKey = require("../config/config").jwtSecretKey;
+const jwt = require("jsonwebtoken");
+
 let controller = {
   validateUser: (req, res, next) => {
     let user = req.body;
@@ -79,8 +82,8 @@ let controller = {
                 message: `User succefully added`,
               });
             } else {
-              res.status(401).json({
-                status: 401,
+              res.status(409).json({
+                status: 409,
                 message: `Emailaddress already exists`,
               });
             }
@@ -171,8 +174,8 @@ let controller = {
               result: user,
             });
           } else {
-            res.status(401).json({
-              status: 401,
+            res.status(404).json({
+              status: 404,
               message: `User with ID ${userId} not found`,
             });
           }
@@ -184,6 +187,13 @@ let controller = {
   delUserById: (req, res, next) => {
     const userId = req.params.userId;
     console.log(`Searched for user with ID: ${userId}`);
+
+    const authHeader = req.headers.authorization;
+    const token = authHeader.substring(7, authHeader.length);
+    var decoded = jwt.verify(token, jwtSecretKey);
+
+    currentuserId = decoded.userId;
+    console.log(currentuserId);
 
     let idCheck;
 
@@ -200,26 +210,33 @@ let controller = {
         }
         // Use the connection
         if (idCheck == false) {
-          connection.query(
-            "DELETE FROM user WHERE user.id = " + userId + ";",
-            function (error, results, fields) {
-              // When done with the connection, release it.
-              // Handle error after the release.
-              if (error) throw error;
+          if (currentuserId == userId) {
+            connection.query(
+              "DELETE FROM user WHERE user.id = " + userId + ";",
+              function (error, results, fields) {
+                // When done with the connection, release it.
+                // Handle error after the release.
+                if (error) throw error;
 
-              // Don't use the connection here, it has been returned to the pool.
-              console.log("#results = ", results.length);
-              res.status(200).json({
-                status: 200,
-                message: `User with ID ${userId} deleted!`,
-              });
+                // Don't use the connection here, it has been returned to the pool.
+                console.log("#results = ", results.length);
+                res.status(200).json({
+                  status: 200,
+                  message: `User with ID ${userId} deleted!`,
+                });
 
-              connection.release();
-            }
-          );
+                connection.release();
+              }
+            );
+          } else {
+            res.status(403).json({
+              status: 403,
+              message: `You are not the owner of this user account`,
+            });
+          }
         } else {
-          res.status(401).json({
-            status: 401,
+          res.status(400).json({
+            status: 400,
             message: `User with ID ${userId} not found!`,
           });
         }
@@ -230,6 +247,13 @@ let controller = {
   updateUserById: (req, res, next) => {
     const userId = req.params.userId;
     console.log(`user met ID ${userId} gezocht`);
+
+    const authHeader = req.headers.authorization;
+    const token = authHeader.substring(7, authHeader.length);
+    var decoded = jwt.verify(token, jwtSecretKey);
+
+    currentuserId = decoded.userId;
+    console.log(currentuserId);
 
     let idCheck;
     let emailCheck = true;
@@ -249,69 +273,121 @@ let controller = {
         }
 
         // Don't use the connection here, it has been returned to the pool.
-        if (idCheck == true) {
-          connection.query(
-            "SELECT * FROM user WHERE id = " + userId + "",
-            function (error, results2, fields) {
-              for (let i = 0; i < results.length; i++) {
-                if (results[i].emailAdress == user.emailAdress) {
-                  emailCheck = false;
-                  break;
-                }
-                if (results2[0].emailAdress == user.emailAdress) {
-                  emailCheck = true;
-                  break;
-                }
-              }
-              if (emailCheck == true) {
-                console.log(results2[0].emailAdress);
-                // Handle error after the release.
-                if (error) throw error;
-                id = parseInt(userId);
-                user = {
-                  id,
-                  ...user,
-                };
+        if (user.emailAdress !== undefined) {
+          if (idCheck == true) {
+            if (currentuserId == userId) {
+              connection.query(
+                "SELECT * FROM user WHERE id = " + userId + "",
+                function (error, results2, fields) {
+                  for (let i = 0; i < results.length; i++) {
+                    if (results2[0].emailAdress == user.emailAdress) {
+                      emailCheck = true;
+                      break;
+                    }
+                    if (results[i].emailAdress == user.emailAdress) {
+                      emailCheck = false;
+                      break;
+                    }
+                  }
+                  if (emailCheck == true) {
+                    console.log(results2[0].emailAdress);
+                    // Handle error after the release.
+                    if (error) throw error;
+                    id = parseInt(userId);
+                    user = {
+                      id,
+                      ...user,
+                    };
 
-                connection.query(
-                  "UPDATE `user` SET `firstName`='" +
-                    user.firstName +
-                    "',`lastName`='" +
-                    user.lastName +
-                    "',`emailAdress`='" +
-                    user.emailAdress +
-                    "',`password`='" +
-                    user.password +
-                    "',`phoneNumber`='" +
-                    user.phoneNumber +
-                    "',`street`='" +
-                    user.street +
-                    "',`city`='" +
-                    user.city +
-                    "' WHERE id = " +
-                    userId +
-                    ""
-                );
-                console.log(`User with ID ${userId} succesfully changed`);
-                res.status(201).json({
-                  status: 201,
-                  message: `User with ID ${userId} succesfully changed`,
-                });
-              } else {
-                console.log(`Emailaddress  already exists`);
-                res.status(401).json({
-                  status: 401,
-                  message: `Emailaddress  already exists`,
-                });
-              }
+                    connection.query(
+                      "UPDATE `user` SET `firstName`='" +
+                        user.firstName +
+                        "',`lastName`='" +
+                        user.lastName +
+                        "',`emailAdress`='" +
+                        user.emailAdress +
+                        "',`password`='" +
+                        user.password +
+                        "',`phoneNumber`='" +
+                        user.phoneNumber +
+                        "',`street`='" +
+                        user.street +
+                        "',`city`='" +
+                        user.city +
+                        "' WHERE id = " +
+                        userId +
+                        ""
+                    );
+                    console.log(`User with ID ${userId} succesfully changed`);
+                    res.status(200).json({
+                      status: 200,
+                      message: `User with ID ${userId} succesfully changed`,
+                    });
+                  } else {
+                    console.log(`Emailaddress already exists`);
+                    res.status(401).json({
+                      status: 401,
+                      message: `Emailaddress already exists`,
+                    });
+                  }
+                }
+              );
+            } else {
+              res.status(401).json({
+                status: 401,
+                result: `Not logged in`,
+              });
             }
-          );
+          } else {
+            console.log(`User with ID ${userId} not found`);
+            res.status(401).json({
+              status: 401,
+              message: `User with ID ${userId} not found`,
+            });
+          }
         } else {
           console.log(`User with ID ${userId} not found`);
-          res.status(401).json({
-            status: 401,
-            message: `User with ID ${userId} not found`,
+          res.status(400).json({
+            status: 400,
+            message: `Emailaddress is missing!`,
           });
+        }
+      });
+    });
+  },
+
+  userProfile: (req, res) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.substring(7, authHeader.length);
+    var decoded = jwt.verify(token, jwtSecretKey);
+
+    currentuserid = decoded.userId;
+    console.log(currentuserid);
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      connection.query("SELECT * FROM user", function (error, results, fields) {
+        // When done with the connection, release it.
+        connection.release();
+        let user = results.filter((item) => item.id == currentuserid);
+        // Handle error after the release.
+        if (error) throw error;
+
+        // Don't use the connection here, it has been returned to the pool.
+        console.log("results = ", results.length);
+        if (user.length > 0) {
+          console.log(user);
+          res.status(200).json({
+            status: 200,
+            result: user,
+          });
+        } else {
+          const error = {
+            status: 401,
+            message: `User with ID ${currentuserid} not found`,
+          };
+          next(error);
         }
       });
     });
