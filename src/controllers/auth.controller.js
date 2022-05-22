@@ -10,6 +10,7 @@ let controller = {
       if (err) {
         logger.error("Error getting connection from dbconnection");
         res.status(500).json({
+          status: 500,
           error: err.toString(),
           datetime: new Date().toISOString(),
         });
@@ -24,6 +25,7 @@ let controller = {
             if (err) {
               logger.error("Error: ", err.toString());
               res.status(500).json({
+                status: 500,
                 error: err.toString(),
                 datetime: new Date().toISOString(),
               });
@@ -60,6 +62,7 @@ let controller = {
               } else {
                 logger.info("User not found or password invalid");
                 res.status(401).json({
+                  status: 401,
                   message: "User not found or password invalid",
                   datetime: new Date().toISOString(),
                 });
@@ -87,7 +90,8 @@ let controller = {
       );
       next();
     } catch (ex) {
-      res.status(422).json({
+      res.status(400).json({
+        status: 400,
         message: ex.toString(),
         datetime: new Date().toISOString(),
       });

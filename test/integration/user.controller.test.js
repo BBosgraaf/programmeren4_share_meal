@@ -12,8 +12,8 @@ chai.use(chaiHttp);
 
 //UC-201
 describe("UC-201 Registreren als nieuwe gebruiker ", () => {
-  //UC-201 Verplicht veld ontbreekt
-  describe("UC-201 Verplicht veld ontbreekt", () => {
+  //UC-201-1 Verplicht veld ontbreekt
+  describe("UC-201-1 Verplicht veld ontbreekt", () => {
     beforeEach((done) => {
       databes = [];
       done();
@@ -45,8 +45,8 @@ describe("UC-201 Registreren als nieuwe gebruiker ", () => {
     });
   });
 
-  //UC-201 Gebruiker bestaat al
-  describe("UC-201 Gebruiker bestaat al", () => {
+  //UC-201-4 Gebruiker bestaat al
+  describe("UC-201-4 Gebruiker bestaat al", () => {
     beforeEach((done) => {
       databes = [];
       done();
@@ -78,8 +78,8 @@ describe("UC-201 Registreren als nieuwe gebruiker ", () => {
     });
   });
 
-  //UC-201 Succesvol toevoegen
-  describe("UC-201 Succesvol toevoegen", () => {
+  //UC-201-5 Succesvol toevoegen
+  describe("UC-201-5 Succesvol toevoegen", () => {
     beforeEach((done) => {
       databes = [];
       done();
@@ -235,8 +235,8 @@ describe("UC-202 Overzicht van gebruikers ", () => {
 
 //UC-203
 describe("UC-203 Gebruikerprofiel opvragen ", () => {
-  //UC-203 Gebruiker profiel ophalen geldige token
-  describe("UC-203 Gebruiker profiel ophalen geldige token", () => {
+  //UC-203-1 Gebruiker profiel ophalen geldige token
+  describe("UC-203-1 Gebruiker profiel ophalen geldige token", () => {
     beforeEach((done) => {
       databes = [];
       done();
@@ -246,10 +246,7 @@ describe("UC-203 Gebruikerprofiel opvragen ", () => {
       chai
         .request(server)
         .get("/api/user/profile")
-        .set(
-          "authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1Mjk2OTg2MiwiZXhwIjoxNjU0MDA2NjYyfQ.dUK3mvF2YkA4x-T4EgC0_FzXJoKy1Or7cdra0M0BXU8"
-        )
+        .set("authorization", "Bearer " + jwt.sign({ userId: 1 }, jwtSecretKey))
 
         .end((err, res) => {
           res.should.be.an("object");
@@ -261,8 +258,8 @@ describe("UC-203 Gebruikerprofiel opvragen ", () => {
     });
   });
 
-  //UC-203 Gebruiker profiel ophalen ongeldige token
-  describe("UC-203 Gebruiker profiel ophalen ongeldige token", () => {
+  //UC-203-2 Gebruiker profiel ophalen ongeldige token
+  describe("UC-203-2 Gebruiker profiel ophalen ongeldige token", () => {
     beforeEach((done) => {
       databes = [];
       done();
@@ -337,7 +334,6 @@ describe("UC-204 Details van gebruikers ", () => {
         });
     });
   });
-
   //UC-204-3 Gebruiker-ID bestaat
   describe("UC-204-3 Gebruiker-ID bestaat", () => {
     beforeEach((done) => {
@@ -432,7 +428,6 @@ describe("UC-205 Gebruiker wijzigen ", () => {
         });
     });
   });
-
   //UC-205-5 Niet ingelogd
   describe("UC-205-5 Niet ingelogd", () => {
     beforeEach((done) => {

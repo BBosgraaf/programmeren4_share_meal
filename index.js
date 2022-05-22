@@ -3,6 +3,7 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT;
 const userRouter = require("./src/routes/user.routes");
+const mealRouter = require("./src/routes/meal.routes");
 const authRoutes = require("./src/routes/auth.routes");
 
 const bodyParser = require("body-parser");
@@ -18,8 +19,8 @@ app.all("*", (req, res, next) => {
 });
 
 //Router gebruiken met alle routes van users
-app.use(userRouter);
-app.use("/api", authRoutes);
+app.use(userRouter, mealRouter);
+app.use("/api", authRoutes, mealRouter);
 
 app.all("*", (req, res) => {
   res.status(401).json({

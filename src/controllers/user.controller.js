@@ -192,8 +192,7 @@ let controller = {
     const token = authHeader.substring(7, authHeader.length);
     var decoded = jwt.verify(token, jwtSecretKey);
 
-    currentuserId = decoded.userId;
-    console.log(currentuserId);
+    userTokenId = decoded.userId;
 
     let idCheck;
 
@@ -210,7 +209,7 @@ let controller = {
         }
         // Use the connection
         if (idCheck == false) {
-          if (currentuserId == userId) {
+          if (userTokenId == userId) {
             connection.query(
               "DELETE FROM user WHERE user.id = " + userId + ";",
               function (error, results, fields) {
@@ -252,8 +251,7 @@ let controller = {
     const token = authHeader.substring(7, authHeader.length);
     var decoded = jwt.verify(token, jwtSecretKey);
 
-    currentuserId = decoded.userId;
-    console.log(currentuserId);
+    userTokenId = decoded.userId;
 
     let idCheck;
     let emailCheck = true;
@@ -275,7 +273,7 @@ let controller = {
         // Don't use the connection here, it has been returned to the pool.
         if (user.emailAdress !== undefined) {
           if (idCheck == true) {
-            if (currentuserId == userId) {
+            if (userTokenId == userId) {
               connection.query(
                 "SELECT * FROM user WHERE id = " + userId + "",
                 function (error, results2, fields) {
@@ -361,8 +359,8 @@ let controller = {
     const token = authHeader.substring(7, authHeader.length);
     var decoded = jwt.verify(token, jwtSecretKey);
 
-    currentuserid = decoded.userId;
-    console.log(currentuserid);
+    userTokenId = decoded.userId;
+
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
 
@@ -370,7 +368,7 @@ let controller = {
       connection.query("SELECT * FROM user", function (error, results, fields) {
         // When done with the connection, release it.
         connection.release();
-        let user = results.filter((item) => item.id == currentuserid);
+        let user = results.filter((item) => item.id == userTokenId);
         // Handle error after the release.
         if (error) throw error;
 
@@ -385,7 +383,7 @@ let controller = {
         } else {
           const error = {
             status: 401,
-            message: `User with ID ${currentuserid} not found`,
+            message: `User with ID ${userTokenId} not found`,
           };
           next(error);
         }
