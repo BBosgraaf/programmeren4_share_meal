@@ -1,92 +1,53 @@
-# programmeren-4-sam-server
+# Share a meal API Server Bryan
 
+## Beschrijving
 
+Dit is een project voor het vak programmeren 4 van de opleiding informatica Avans Breda. In de vorige periode hebben wij een Android applicatie gemaakt die gebruik maakte van een Share-a-Meal API. Deze periode was de bedoeling dat wij zelf de API ervoor gingen maken. De bedoeling van de API is dat je een gebruiker kan aanmaken bewerken en verwijderen. Ook moet je een overzicht kunnen ophalen met alle gebruikers. Eventueel kan er gezocht worden op naam of dat deze gebruiker actief is. Een gebruiker kan ook een maaltijd aanmaken (en bewerken en verwijderen). Waarna alle maaltijden opgehaald kunnen worden waar vervolgens andere gebruikers zich op kunnen inschrijven. Deze API Server is gamaakt met Node.js
 
-## Getting started
+## Functionaliteiten
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- UC-101 Login
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- UC-201 Registeren als nieuwe gebruiker
+- UC-202 Overzicht van gebruikers
+- UC-203 Gebruikersprofiel opvragen
+- UC-204 Details van gebuiker
+- UC-205 Gebruiker wijzigen
+- UC-206 Gebruiker Verwijderen
 
-## Add your files
+- UC-301 Maaltijd aanmaken
+- UC-302 Maaltijd wijzigen
+- UC-303 Lijst van maaltijden opvragen
+- UC-304 Details van maaltijd opvragen
+- UC-305 Maaltijd verwijderen
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/rschellius/programmeren-4-sam-server.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/rschellius/programmeren-4-sam-server/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- UC-401 Aanmelden voor maaltijd
+- UC-402 Afmelden voor maaltijd
 
 ## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+![Deploy to Heroku](https://github.com/BBosgraaf/programmeren4_share_meal/actions/workflows/main.yml/badge.svg)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Instalatie
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Hoe te installeren:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- git clone repository
+- npm install
+- npm start
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Auteur
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
+Gemaakt door: Bryan Bosgraaf
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+Dit project is nog niet helemaal af.
+Functies die nog gemaakt moeten worden:
+
+- Maaltijd aanpassen (UC-302)
+- Aanmelden maaltijd (UC-401)
+- Afmelden maaltijd (UC-402)
+- Email validatie
+- Wachtwoord validatie
+- Telefoon nummer validatie
