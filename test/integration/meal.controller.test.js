@@ -94,7 +94,7 @@ describe("UC-301 Maaltijd aanmaken ", () => {
           isVega: "1",
           isVegan: "0",
           isToTakeHome: "0",
-          dateTime: "",
+          dateTime: "2022-05-22 20:30:00",
           maxAmountOfParticipants: "4",
           price: "10",
           imageUrl:
