@@ -43,7 +43,7 @@ Gemaakt door: Bryan Bosgraaf
 ## Project status
 
 Dit project is nog niet helemaal af.
-Functies die nog gemaakt moeten worden:
+Functionaliteiten die nog gemaakt moeten worden:
 
 - Maaltijd aanpassen (UC-302)
 - Aanmelden maaltijd (UC-401)
