@@ -34,7 +34,6 @@ describe("UC-301 Maaltijd aanmaken ", () => {
           price: "10",
           imageUrl:
             "https://miljuschka.nl/wp-content/uploads/2021/02/Pasta-bolognese-3-2.jpg",
-          updateDate: "",
           name: "Pasta Bolognese met tomaat, spekjes en kaas",
           description:
             "Een heerlijke klassieker! Altijd goed voor tevreden gesmikkel!",
@@ -99,7 +98,6 @@ describe("UC-301 Maaltijd aanmaken ", () => {
           price: "10",
           imageUrl:
             "https://miljuschka.nl/wp-content/uploads/2021/02/Pasta-bolognese-3-2.jpg",
-          updateDate: "",
           name: "Pasta Bolognese met tomaat, spekjes en kaas",
           description:
             "Een heerlijke klassieker! Altijd goed voor tevreden gesmikkel!",
