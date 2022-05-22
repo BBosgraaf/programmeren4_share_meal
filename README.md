@@ -38,7 +38,7 @@ Hoe te installeren:
 
 ## Auteur
 
-Gemaakt door: Bryan Bosgraaf 2191941.
+Gemaakt door: Bryan Bosgraaf 2191941
 
 ## Project status
 
